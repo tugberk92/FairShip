@@ -129,18 +129,14 @@ def dNdPdTheta(p, theta, E, mDarkPhoton, epsilon):
     return math.fabs(diffRate) # integrating in (-pi, pi)...
 
 
-def pMin(E,mDarkPhoton):
-    #return max(0.14*protonMomentum(E), mDarkPhoton)
-    return max(0.1*protonMomentum(E), mDarkPhoton)
+def pMin(E,mDarkPhoton,zmin=0.1):
+    return max(zmin*protonMomentum(E), mDarkPhoton)
 
 
-def pMax(E,mDarkPhoton):
-    #return min(0.86*protonMomentum, math.sqrt( (energy(protonMomentum,mProton)**2. - mDarkPhoton**2.) - mDarkPhoton**2.))
-    return math.sqrt( (energy(protonMomentum(E),mProton)**2. - mDarkPhoton**2.) - mDarkPhoton**2.)
+def pMax(E,mDarkPhoton,zmax=0.9):
+    return min(zmax*protonMomentum(E), math.sqrt( (energy(protonMomentum(E),mProton)**2. - mDarkPhoton**2.) - mDarkPhoton**2.))
 
-def prodRate(E, mDarkPhoton, epsilon, ptmax = 4.0, pmin = -1, pmax = -1):
-    if pmin==-1: pmin = pMin(E,mDarkPhoton)
-    if pmax==-1: pmax = pMax(E,mDarkPhoton)
+def prodRate(E, mDarkPhoton, epsilon, ptmax,pmin,pmax):
     if ptmax==-1:
         tmin = -0.5 * math.pi
         tmax = 0.5 * math.pi
@@ -171,9 +167,7 @@ def normalisedProductionPDF(E, p, theta, mDarkPhoton, epsilon, norm):
     """ Probability density function for A' production in SHIP """
     return (1. / norm) * dNdPdTheta(p, theta, E, mDarkPhoton, epsilon)
 
-def hProdPDF(E,mDarkPhoton, epsilon, norm, binsp, binstheta, ptmax = 4.0, pmin = -1, pmax = -1, suffix=""):
-    if pmin==-1: pmin = pMin(E,mDarkPhoton)
-    if pmax==-1: pmax = pMax(E,mDarkPhoton)
+def hProdPDF(E,mDarkPhoton, epsilon, norm, binsp, binstheta, ptmax, pmin, pmax, suffix=""):
     if ptmax==-1:
         tmin = -0.5 * math.pi
         tmax = 0.5 * math.pi
@@ -217,5 +211,3 @@ def hProdPDF(E,mDarkPhoton, epsilon, norm, binsp, binstheta, ptmax = 4.0, pmin =
     del angles
     del momenta
     return hPDF
-
-

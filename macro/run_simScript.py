@@ -115,6 +115,9 @@ parser.add_argument("-D", "--display", dest="eventDisplay", help="store trajecto
 parser.add_argument("--stepMuonShield", dest="muShieldStepGeo", help="activate steps geometry for the muon shield", required=False, action="store_true", default=False)
 parser.add_argument("--coMuonShield", dest="muShieldWithCobaltMagnet", help="replace one of the magnets in the shield with 2.2T cobalt one, downscales other fields, works only for muShieldDesign >2", required=False, type=int, default=0)
 parser.add_argument("--MesonMother",   dest="MM",  choices=['pi0','eta','omega','eta1','eta11'], help="Choose DP production meson source(pi0,eta,omega,eta1,eta11)", required=False,    default=True)
+parser.add_argument("--zmin", dest="Zmin",  help="zmin value(the default is 0.1) for DP-pbrem production", required=False, default=0.1, type=float)
+parser.add_argument("--zmax", dest="Zmax",  help="zmax value(the default is 0.9) for DP-pbrem production", required=False, default=0.9, type=float)
+parser.add_argument("--ptmax", dest="pTmax",  help="pTmax value(the default is 4.0) for DP-pbrem production", required=False, default=4.0, type=float)
 
 options = parser.parse_args()
 
@@ -287,7 +290,7 @@ if simEngine == "Pythia8":
    P8gen.SetDPId(9900015)
   if options.MiniShield: P8gen.SetMiniShield()
   import pythia8darkphoton_conf
-  passDPconf = pythia8darkphoton_conf.configure(P8gen,options.theMass,options.theDPepsilon,inclusive, options.MM, options.deepCopy)
+  passDPconf = pythia8darkphoton_conf.configure(P8gen, options.theMass, options.theDPepsilon, inclusive, options.MM, options.pTmax, options.Zmin, options.Zmax, options.deepCopy)
   if (passDPconf!=1): sys.exit()
  if HNL or options.RPVSUSY or options.DarkPhoton: 
   P8gen.SetSmearBeam(1*u.cm) # finite beam size

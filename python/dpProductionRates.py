@@ -28,16 +28,16 @@ def isDP(pdg):
         return True
     return False
 
-def pbremProdRateVDM(mass,epsilon,doprint=False,E=400.):
-    xswg = proton_bremsstrahlung.prodRate(E, mass, epsilon)
+def pbremProdRateVDM(mass,epsilon,doprint=False,E=400.,ptmax=4.0,zmin=0.1,zmax=0.9):
+    xswg = proton_bremsstrahlung.prodRate(E, mass, epsilon,ptmax,proton_bremsstrahlung.pMin(E,mass,zmin),proton_bremsstrahlung.pMax(E,mass,zmax))
     if doprint: print("Ep= %.8g, A' production rate per p.o.t: \t %.8g"%(E,xswg))
     rhoff = proton_bremsstrahlung.rhoFormFactor(mass)**2
     if doprint: print("A' rho form factor: \t %.8g"%rhoff)
     if doprint: print("A' rescaled production rate per p.o.t:\t %.8g"%(xswg*rhoff))
     return xswg*rhoff
 
-def pbremProdRateDipole(mass,epsilon,doprint=False,E=400.):
-    xswg = proton_bremsstrahlung.prodRate(E, mass, epsilon)
+def pbremProdRateDipole(mass,epsilon,doprint=False,E=400.,ptmax=4.0,zmin=0.1,zmax=0.9):
+    xswg = proton_bremsstrahlung.prodRate(E, mass, epsilon,ptmax,proton_bremsstrahlung.pMin(E,mass,zmin),proton_bremsstrahlung.pMax(E,mass,zmax))
     if doprint: print("Ep= %.8g, A' production rate per p.o.t: \t %.8g"%(E,xswg))
     penalty = proton_bremsstrahlung.penaltyFactor(mass)
     if doprint: print("A' penalty factor: \t %.8g"%penalty)
@@ -114,11 +114,11 @@ def qcdprodRate(mass,epsilon,doprint=False):
         xs = 0.
     return xs*epsilon*epsilon/10.7
 
-def getDPprodRate(mass,epsilon,prodMode,mumPdg,doprint=False,E=400.):
+def getDPprodRate(mass,epsilon,prodMode,mumPdg,doprint=False,E=400.,ptmax=4.0,zmin=0.1,zmax=0.9):
     if (prodMode=='pbrem'):
-        return pbremProdRateVDM(mass,epsilon,doprint,E)
+        return pbremProdRateVDM(mass,epsilon,doprint,E,ptmax,zmin,zmax)
     elif (prodMode=='pbrem1'):
-        return pbremProdRateDipole(mass,epsilon,doprint,E)
+        return pbremProdRateDipole(mass,epsilon,doprint,E,ptmax,zmin,zmax)
     elif (prodMode=='meson'):
         return mesonProdRate(mass,epsilon,mumPdg,doprint)
     elif (prodMode=='qcd'):

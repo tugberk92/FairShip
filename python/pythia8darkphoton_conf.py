@@ -76,7 +76,7 @@ def manipulatePhysics(motherMode, mass, P8gen):
         return -1
     return selectedMum
 
-def configure(P8gen, mass, epsilon, inclusive, motherMode, deepCopy=False, debug=True):
+def configure(P8gen, mass, epsilon, inclusive, motherMode, ptmax, zmin, zmax, deepCopy=False, debug=True):
     # configure pythia8 for Ship usage
     if debug:
         pythia_log=open('pythia8_conf.txt','w')
@@ -137,10 +137,12 @@ def configure(P8gen, mass, epsilon, inclusive, motherMode, deepCopy=False, debug
         P8gen.SetParameters("Next:numberShowProcess = 0")
         P8gen.SetParameters("Next:numberShowEvent = 0")
         proton_bremsstrahlung.protonEnergy=P8gen.GetMom()
-        print("proton energy: %.8g"%proton_bremsstrahlung.protonEnergy)
-        norm=proton_bremsstrahlung.prodRate(proton_bremsstrahlung.protonEnergy, mass, epsilon)
+        pmin = proton_bremsstrahlung.pMin(proton_bremsstrahlung.protonEnergy,mass,zmin)
+        pmax = proton_bremsstrahlung.pMax(proton_bremsstrahlung.protonEnergy,mass,zmax)
+        print("proton energy: %.8g, pTmax: %.8g, zmin: %.8g, pmin= %.8g, zmax: %.8g, pmax= %.8g"%(proton_bremsstrahlung.protonEnergy, ptmax, zmin, pmin, zmax, pmax))
+        norm=proton_bremsstrahlung.prodRate(proton_bremsstrahlung.protonEnergy, mass, epsilon, ptmax,pmin,pmax)
         print("A' production rate per p.o.t: %.8g"%norm)
-        P8gen.SetPbrem(proton_bremsstrahlung.hProdPDF(proton_bremsstrahlung.protonEnergy, mass, epsilon, norm, 350, 1500))
+        P8gen.SetPbrem(proton_bremsstrahlung.hProdPDF(proton_bremsstrahlung.protonEnergy, mass, epsilon, norm, 350, 1500,ptmax,pmin,pmax))
 
     #Define dark photon
     DP_instance = darkphoton.DarkPhoton(mass,epsilon)
