@@ -143,7 +143,7 @@ def prodRate(E, mDarkPhoton, epsilon, ptmax,pmin,pmax):
     else:
         tmin = -math.atan(ptmax/pmin)
         tmax = math.atan(ptmax/pmin)
-    print "Boundary conditions: pTmax = %.3f, theta [%.3f,%.3f], p [%.3f,%.3f]"%(ptmax,tmin,tmax,pmin,pmax)
+    #print "Boundary conditions: pTmax = %.3f, theta [%.3f,%.3f], p [%.3f,%.3f]"%(ptmax,tmin,tmax,pmin,pmax)
     """ dNdPdTheta integrated over p and theta """
     integral = dblquad( dNdPdTheta, # integrand
                         tmin, tmax, # theta boundaries (2nd argument of integrand)
